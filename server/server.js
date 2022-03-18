@@ -16,7 +16,7 @@ const port = process.env.PORT || 3001;
 const server = app.listen(port, () =>
   console.log(`server is running on ${port}`)
 );
-const io = require("/socket").init(server, {
+const io = require("./utills/socket").init(server, {
   cors: { origin: "*" },
 });
 io.on("connection", (socket) => {
