@@ -13,4 +13,10 @@ app.use("/api", routes);
 
 const port = process.env.PORT || 3001;
 
-app.listen(port, () => console.log(`server is running on ${port}`));
+const server = app.listen(port, () =>
+  console.log(`server is running on ${port}`)
+);
+const io = require("socket.io")(server);
+io.on("connection", (socket) => {
+  console.log("Client connected");
+});
