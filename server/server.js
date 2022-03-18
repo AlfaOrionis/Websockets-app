@@ -16,7 +16,9 @@ const port = process.env.PORT || 3001;
 const server = app.listen(port, () =>
   console.log(`server is running on ${port}`)
 );
-const io = require("socket.io")(server);
+const io = require("socket.io")(server, {
+  cors: { origin: "*" },
+});
 io.on("connection", (socket) => {
   console.log("Client connected");
 });

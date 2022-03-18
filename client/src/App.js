@@ -5,8 +5,8 @@ const App = () => {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    openSocket("http://localhost:3000");
-  });
+    openSocket("http://localhost:3001");
+  }, []);
 
   return (
     <div>
