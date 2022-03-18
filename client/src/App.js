@@ -1,47 +1,51 @@
-import React, { useState } from "react";
-import openSocket, { io } from "socket.io-client";
+import React, { useState, useEffect, useRef } from "react";
+import openSocket from "socket.io-client";
+const socket = openSocket("http://localhost:3001");
 
 const App = () => {
-  const [message, setMessage] = useState("");
-  const [recievedMessage, setRecieved] = useState("");
+  //REF
+  const inputRef = useRef();
 
-  // const socket = openSocket("http://localhost:3001");
-  // socket.on("message", (data) => {
-  //   if (data.action === "message") {
-  //     console.log("DZIALA DZIALA");
-  //   }
-  // });
-  const socket = io("ws://localhost:3001");
+  //STATE
+  const [statements, setStatements] = useState([]);
 
-  socket.on("message", (data) => console.log(data.message));
+  console.log("LOADING APP");
 
-  const sendMessageHandler = (e) => {
+  //USE EFFECT
+  useEffect(() => {
+    socket.on("message", (data) => {
+      console.log("SOCKET");
+      setStatements(data.statements);
+    });
+  }, []);
+
+  //SUBMIT HANDLER
+  const submitHandler = (e) => {
     e.preventDefault();
     fetch("api/users/message", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        message: message,
+        //So i am just taking the statements array, and adding a new one
+        statements: [
+          ...statements,
+          inputRef.current.value ? inputRef.current.value : "",
+        ],
       }),
     })
       .then((res) => res.json())
       .then((data) => {
-        setRecieved(data.message);
-        socket.emit("message", message);
+        setStatements(data.statements);
       });
   };
 
   return (
     <div>
-      <p>{recievedMessage}</p>
+      <ul>{statements && statements.map((stt) => <li>{stt}</li>)}</ul>
       <ul id="messages"></ul>
       <form id="form" action="">
-        <input
-          id="input"
-          autocomplete="off"
-          onChange={(e) => setMessage(e.target.value)}
-        />
-        <button onClick={sendMessageHandler}>Send</button>
+        <input id="input" autocomplete="off" ref={inputRef} />
+        <button onClick={submitHandler}>Send</button>
       </form>
     </div>
   );

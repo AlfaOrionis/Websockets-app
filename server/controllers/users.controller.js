@@ -3,12 +3,12 @@ const io = require("../utills/socket");
 const usersController = {
   async Message(req, res, next) {
     try {
-      const message = req.body.message;
+      const statements = req.body.statements;
 
-      io.getIO().emit("message", { action: "send", message: message });
+      io.getIO().emit("message", { action: "send", statements });
 
       res.status(201).send({
-        message,
+        statements,
       });
     } catch (err) {
       console.log(err);
