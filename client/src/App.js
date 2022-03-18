@@ -1,7 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import openSocket from "socket.io-client";
 
 const App = () => {
   const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    openSocket("http://localhost:3000");
+  });
 
   return (
     <div>
